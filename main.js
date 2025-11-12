@@ -4,7 +4,7 @@ const userTextField = document.getElementById("userText");
 const tasksKey = "myTasks";
 
 function loadTasks() {
-  const taskString = localStorage.getItem("tasksKey");
+  const taskString = localStorage.getItem(tasksKey);
   if (!taskString) return;
   const taskArray = JSON.parse(taskString);
   taskArray.forEach((task) => {
@@ -18,9 +18,9 @@ function saveTasks() {
   lielements.forEach((li) => {
     const span = li.querySelector("span");
     allTasks.push(span.textContent);
-    const allTasksString = JSON.stringify(allTasks);
-    localStorage.setItem("tasksKey", "allTasksString");
   });
+  const allTasksString = JSON.stringify(allTasks);
+  localStorage.setItem(tasksKey, allTasksString);
 }
 
 /* @param {string} taskText  */
@@ -36,26 +36,20 @@ function createTaskElement(taskText) {
     newLi.remove();
     saveTasks();
   });
-  newLi.appendChild(taskText);
+  newLi.appendChild(newSpan);
   newLi.appendChild(deleteButton);
   savedTextDisplay.appendChild(newLi);
 }
 
 savedButton.addEventListener("click", function () {
   /* save the entered value in let savedText */
-  const savedText = userTextField.value;
+  const taskText = userTextField.value;
+  if (taskText.trim() === "") {
+    return;
+  }
 
-  /*   const newLi = document.createElement("li"); */
-
-  /* create a new button and then change its name to Delete*/
-
-  /* function for deleting the li on clicking on delete */
-
-  /* add newly created button in li */
-
-  /* add newly created li (with saved value) in ul */
-  savedTextDisplay.appendChild(newLi);
-  /* set input field to empty */
-
+  createTaskElement(taskText);
   userTextField.value = "";
+  saveTasks();
 });
+loadTasks();
